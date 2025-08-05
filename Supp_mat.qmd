@@ -99,6 +99,7 @@ En caso de querer consultar una subespecie, esta puede escribirse como *Género 
 ```{r, basic example2, error=TRUE}
 # Usar el formato *Género especie subespecie* da resultados
 # equivalentes a *Género especie subsp. subespecie*:
+# Con subsp-
 eidos_subsp1 = eidosapi::eidos_taxon_by_name(
   taxon_list = "Pinus nigra subsp. salzmannii"
   )
@@ -107,6 +108,7 @@ head(
                "idtaxon", "nametype", "acceptednameid")],
      n = 3)
 
+# Sin subsp.
 eidos_subsp2 = eidosapi::eidos_taxon_by_name(
   taxon_list = "Pinus nigra salzmannii"
   )
