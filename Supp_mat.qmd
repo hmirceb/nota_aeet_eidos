@@ -40,14 +40,13 @@ cite_options(citation_format = "pandoc")
 
 # Instalación
 
-La instalación del paquete puede realizarse facilmente desde R clonando el repositorio disponible en GitHub empleando la función `install_github` de los paquetes **devtools** `r citep(citation("devtools"))` y **remotes** `r citep(citation("remotes"))`.
+La instalación del paquete puede realizarse facilmente desde R clonando el repositorio disponible en GitHub empleando la función `install_github` del paquete **remotes** `r citep(citation("remotes"))`.
 
-```{r install package, error=TRUE}
+```{r install package}
 # Instalación con remotes
-remotes::install_github("https://github.com/hmirceb/eidos_api", force = TRUE)
-
-# Instalación con devtools
-#devtools::install_github("https://github.com/hmirceb/eidos_api", force = TRUE)
+remotes::install_github("https://github.com/hmirceb/eidos_api",
+                        force = TRUE, 
+                        quiet = TRUE)
 
 # Cargamos el paquete
 library(eidosapi)
@@ -84,7 +83,7 @@ eidos_results = eidosapi::eidos_taxon_by_name(
 # especie, nombre completo, su identificador y el id
 # del taxón aceptado:
 eidos_results[c("supplied_genus", "supplied_species", "name",
-                "taxonid", "nametype", "acceptednameid")]
+                "idtaxon", "nametype", "acceptednameid")]
 
 # Obtendríamos el mismo resultado si en vez de una tabla
 # usásemos un vector:
@@ -93,32 +92,32 @@ eidos_results = eidosapi::eidos_taxon_by_name(
   taxon_list = taxa_list
   )
 eidos_results[c("supplied_genus", "supplied_species", "name",
-                "taxonid", "nametype", "acceptednameid")]
+                "idtaxon", "nametype", "acceptednameid")]
 
 # Usar el formato *Género especie subespecie* da resultados
 # equivalentes a *Género especie subsp. subespecie*:
 eidos_subsp1 = eidosapi::eidos_taxon_by_name(
   taxon_list = "Pinus nigra subsp. salzmannii"
   )
-head(eidos_subsp1[c("supplied_genus", "supplied_species", "name",
-               "taxonid", "nametype", "acceptednameid")],
+head(eidos_subsp1[c("supplied_taxon", "supplied_species", "name",
+               "idtaxon", "nametype", "acceptednameid")],
      n = 3)
 
 eidos_subsp2 = eidosapi::eidos_taxon_by_name(
   taxon_list = "Pinus nigra salzmannii"
   )
-head(eidos_subsp2[c("supplied_genus", "supplied_species", "name",
-               "taxonid", "nametype", "acceptednameid")],
+head(eidos_subsp2[c("supplied_taxon", "supplied_species", "name",
+               "idtaxon", "nametype", "acceptednameid")],
      n = 3)
 ```
 
-La tabla obtenida contiene las columnas correspondientes a la información que hayamos aportado, con sus nombres precidos por el sufijo *supplied\_*, y todas las columnas que devuelve la API de EIDOS por defecto. Entre estas columnas encontramos *taxonid*, que nos permite hacer uso de otras funciones del paquete **eidos_api**.
+La tabla obtenida contiene las columnas correspondientes a la información que hayamos aportado, con sus nombres precidos por el sufijo *supplied\_*, y todas las columnas que devuelve la API de EIDOS por defecto. Entre estas columnas encontramos *idtaxon*, que nos permite hacer uso de otras funciones del paquete **eidos_api**.
 
 ## Busqueda de especies por identificador
 
 ### Estado de conservación
 
-La columna *taxonid* obtenida en el paso anterior contiene el identificador único para cada taxón de la base de datos. Si nos interesase saber si una especies presente en EIDOS, por ejemplo la gaviota de Audouin (*Larus audouinii*), tiene asociada alguna categoría de amenaza según los criterios la UICN, solo tendríamos que obtener su identificador con la función `eidos_taxon_by_name` y después emplearlo introducirlo en la función `eidos_conservation_by_id`.
+La columna *idtaxon* obtenida en el paso anterior contiene el identificador único para cada taxón de la base de datos. Si nos interesase saber si una especies presente en EIDOS, por ejemplo la gaviota de Audouin (*Larus audouinii*), tiene asociada alguna categoría de amenaza según los criterios la UICN, solo tendríamos que obtener su identificador con la función `eidos_taxon_by_name` y después emplearlo introducirlo en la función `eidos_conservation_by_id`.
 
 ```{r, use of id1, error=TRUE}
 # Buscamos el identificador por nombre:
@@ -127,11 +126,11 @@ eidos_results = eidosapi::eidos_taxon_by_name(
   )
 
 # El identificador debería ser 14053:
-print(eidos_results$taxonid)
+print(eidos_results$idtaxon)
 
 # Accedemos a la información sobre su estado de conservación
 eidos_cons = eidosapi::eidos_conservation_by_id(
-  taxon_id = eidos_results$taxonid
+  taxon_id = eidos_results$idtaxon
   )
 
 # Mostramos solo algunas columnas básicas:
@@ -152,11 +151,11 @@ eidos_results = eidosapi::eidos_taxon_by_name(
   )
 
 # El identificador debería ser 14053:
-print(eidos_results$taxonid)
+print(eidos_results$idtaxon)
 
 # Accedemos a la información sobre su estado de conservación:
 eidos_legal = eidosapi::eidos_legal_status_by_id(
-  taxon_id = eidos_results$taxonid
+  taxon_id = eidos_results$idtaxon
   )
 
 # Mostramos solo las parte porque las normas aparecen 
@@ -179,7 +178,7 @@ eidos_results = eidosapi::eidos_taxon_by_name(
 
 # Accedemos a la información sobre su estado de conservación:
 eidos_taxo = eidosapi::eidos_taxon_by_id(
-  taxon_id = eidos_results$taxonid
+  taxon_id = eidos_results$idtaxon
   )
 eidos_taxo[c("nameid", "name", "nametype", "acceptednameid")]
 ```
