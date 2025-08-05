@@ -18,15 +18,15 @@ bibliography:
 
 > (1) Instituto Pirenaico de Ecología - CSIC
 
-> Autor de correspondencia\*: Héctor Miranda-Cebrián \[[hmiranda@ipe.csic.es](mailto:hmiranda@ipe.csic.es){.email}\]
+> Autor de correspondencia\*: Héctor Miranda-Cebrián \[[hectorm94\@gmail.com](mailto:hectorm94@gmail.com){.email}\]
 
 # Palabras clave
 
-> Taxonomía; Estandarización; Lista Patrón; palabraclave4
+> Taxonomía; Estandarización; Nomenclatura; Lista Patrón
 
 # Keywords
 
-> Taxonomy; Standardization; Checklist; keyword4
+> Taxonomy; Standardization; Nomenclature; Checklist
 
 ```{r knitcitations}
 #| echo: false
