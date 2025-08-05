@@ -1,5 +1,5 @@
 ---
-title: "eidosapi, un paquete para estandarizar la taxonomía de especies en España"
+title: "eidosapi, un paquete para estandarizar nomenclatura de especies en España"
   
 author: Héctor Miranda-Cebrián*^1^
   
@@ -38,65 +38,23 @@ cleanbib()
 cite_options(citation_format = "pandoc")
 ```
 
-El trabajo en biología y cualquiera de sus disciplinas implica necesariamente el manejo de la taxonomía. Diferenciar correctamente diferentes especies en función de su nombre permite. Sin embargo, en ocasiones resulta complicado trabajar cuando no se trabaja directamente dentro del campo de la taxonomía. Esta, como cualquier otro campo de la ciencia, avanza y evoluciona, y con ella cambian los nombres de las especies, se asignan nombres nuevos o las clasificación taxonómica. Esto hace necesario que en ocasiones tengamos que navegar en un mar de sinónimos y equivalencias que dificultan . Para solventar este problema se han ido desarrollando diferente herramientas que permitan cotejar la nomenclatura de una especie contra una base de datos o *backbone* taxonomico. A nivel internacional, entre estas herramientas encontramos algunas de carácter generalista como GBIF o NCBI, y otras especializadas en grupos concretos de organismos como son Tropicos, WoRMS, World Flora Online, Plants of the World Online por citar algunas. A nivel nacional, en España contamos con el acceso a Flora Ibérica y Fauna Ibérica, ambas dos permitiendo consultar sinónimos y nombres a través de sus respectivas páginas web. Entre todas las herramientas anteriores, encontramos varios casos de uso y limitaciones. Las herramientas más generalistas, como GBIF o NCBI, cuentan con extensas bases de datos que pueden consultarse tanto de forma interactiva en sus webs como a través de APIs desde entornos como R. Un ejemplo de esto último son los paquetes *rgbif* `r citep(citation("rgbif"))` y *taxize* @taxize2020. Estos servicios, sin embargo, a veces están limitados en el número de especies que incluyen, algo que se hace especialmente patente si trabajamos con taxa raros o de distirbución muy limitada como subespecies endémicas. Los servicios especializados en un solo grupo taxonómico suelen ser una mejor opción en estos casos y la mayoría de ellos cuentan con APIs especializadas, como pueden ser los paquetes *WorldFlora* `r citep(citation("WorldFlora"))` para acceder a World Flora Online o *LCVP* `r citep(citation("lcvplants"))` para acceder al Catalogo de Plantas Vasculates de Leipzig (*Leipzig Catalogue of Vascular Plants*). La principal desventaja de estos servicios radica en que, a pesar de esto, no tienen información sobre la parte nacional, los nombres aceptados ahí no siempre casan con la parte legislativa/listas nacionales. Por otro lado, su carácter limitado a un solo grupo limita también su utilidad cuando tenemos que trabajar con varios grupos taxonómicos a la vez, como podría ser a la hora de redactar un informe de impacto ambiental o una revisión sistemática del estado de conservación de múltiples especies. Este último caso también evidencia otra de las limitaciones de todos los servicios mencionados anteriormente, su falta de interoperabilidad con bases de datos o catálogos de amenaza a nivel nacional. Aunque contamos con las mencionadas webs de Flora y Fauna Ibérica, estas están limitadas y no cuentan con una forma sencilla que permita acceder a ellas y contrastar la taxonomía de una o varias especies de forma automática o desde entornos de trabajo que permitan integrar los resultados en un flujo de trabajo.
+El trabajo en ecología y cualquiera de sus disciplinas implica necesariamente el manejo de la taxonomía, puesto que diferenciar correctamente especies nos permite compartimentar y estructurar la información que manejamos sobre ellas. Sin embargo, la sistemática y la taxonomía avanzan y evolucionan, y con ella los nombres de las especies con las que trabajamos. Esto hace necesario que en ocasiones tengamos que navegar, a veces a la deriva, en un mar de sinónimos y equivalencias, o lidiar con nombres mal escritos después de horas de trabajo de campo. Para solventar este problema se han ido desarrollando diferente herramientas que permitan cotejar la nomenclatura de una especie contra una base de datos o *backbone* taxonómico. A nivel internacional, entre estas herramientas encontramos algunas de carácter generalista como *Global Names Resolver*, que emplea datos de *Global Biodiversity Information Facility* (GBIF)  y *Encyclopedia of Life*; y otras especializadas en grupos concretos de organismos como son el *World Register of Marine Species*, *International Plant Names Index* o *World Flora Online* por citar algunas. Por otro lado, en España contamos con el acceso a Flora Ibérica y Fauna Ibérica, dos excelentes recursos que permiten, entre otras cosas, consultar sinónimos y nombres a través de sus respectivas páginas web.
 
-## Recursos taxonómicos online en España
+Entre todas las herramientas anteriores, encontramos una gran diversidad tando de formas de consulta como de limitaciones. Las herramientas generalistas como *Global Names Resolver*, cuentan con extensas bases de datos que pueden consultarse tanto de forma interactiva en sus webs como a través de interfaces de programación de aplicaciones (API) desde entornos como R `r citep(citation())`. Un gran ejemplo de esto último es el paquete *taxize* `r citep(citation("taxize"))`, con acceso a cerca de 20 bases de datos diferentes. Estos servicios, sin embargo, a veces están limitados en el número de especies que incluyen, algo que se hace especialmente patente si trabajamos con taxa raros o de distribución muy limitada. Los servicios especializados en un solo grupo taxonómico suelen ser una mejor opción en estos casos y la mayoría de ellos también cuentan con APIs especializadas, como pueden ser los paquetes *WorldFlora* `r citep(citation("WorldFlora"))` para acceder a World Flora Online o *LCVP* `r citep(citation("lcvplants"))` para acceder al Catalogo de Plantas Vasculares de Leipzig (*Leipzig Catalogue of Vascular Plants*). La principal desventaja de estos servicios radica en que, a pesar de la gran cantidad de información que contienen, puede darse un desajuste entre su nomenclatura y la establecida a nivel nacional o regional. Esta limitación se hace más patente si, por ejemplo, queremos recopilar información sobre el estado de conservación de una especie presente en España, puesto que el nombre aceptado por una base de datos internacional puede no casar con el empleado a nivel nacional o regional. Por otro lado, el carácter limitado a un solo grupo de estas bases de datos limita también su utilidad cuando tenemos que trabajar con varios grupos taxonómicos a la vez, como podría ser a la hora de realizar una revisión sistemática del estado de conservación de múltiples especies. Finalmente, los principales recursos taxonómicos disponibles a nivel nacional, Flora Ibérica y Fauna Ibérica, presentan las limitaciones propias de las bases de datos especializadas en un solo grupo mencionadas anteriormente, además de carecer de una interfaz de usuario que permita la consulta de un gran número de especies, acceder a ellas de forma automática o hacerlo desde entornos de trabajo que permitan integrar los resultados en un flujo de trabajo más complejo.
 
-La Lista Patrón de Especies Silvestres presentes en España (LP) es el mayor catálogo de especie y recoge un gran . Incluye información taxonómica proveniente de varias sociedades científicas de ámbito nacional como el Museo Nacional de Ciencias Naturales, el Real Jardín Botánico, la Asociación Herpetológica Española (AHE), la Sociedad Española de Ornitología (SEO-BirdLife), la Sociedad Española de Briología (SEB), la Sociedad Española de Biología de la Conservación de Plantas (SEBICOP), la Sociedad Española para la Conservación y el Estudio de Mamíferos (SECEM), la Sociedad Española de Malacología (SEM), la Asociación Española para la Conservación y el Estudio de los Murciélagos (SECEMU), o Sociedad Ibérica de Ictiología (SIBIC). Esta lista forma parte del [Inventario Español del Patrimonio Natural y de la Biodiversidad (IEPNB)](https://iepnb.gob.es/), que a su vez recoge información sobre otras especies no incluidas en la LP, así como información sobre su estado de conservación y legislación al respecto. El IEPNB permite acceder desde su web a la información de más de 63000 taxa tanto autóctonos y alóctonos presente en la región. Además, esta herramienta pone a nuestra disposición varias interfaces de programación de aplicaciones (API) que nos permiten interactuar con las base de datos de IEPNB, como por ejemplo consultar la información taxonómica o legal de una especie en función de su nombre o identificador único en la base de datos o descargar varias versiones de la LP. A pesar de la gran utilida de estos servicios, la [API](<https://iepnb.gob.es/recursos/servicios-interoperables/apirest-eidos>) disponible directamente desde internet no permite realizar consultas múltiples, aunque sí es posible acceder a ella desde entornos de programación como R `r citep(citation())`, y por tanto es posible automatizar los procesos de consulta.
+# Recursos taxonómicos *online* en España
+
+Un primer paso para solventar estas limitaciones a la hora de acceder a la información taxonómica de las especies en España ha sido la creación del [Inventario Español del Patrimonio Natural y de la Biodiversidad (IEPNB)](https://iepnb.gob.es/) por parte del Ministerio para la Transición Ecológica y el Reto Demográfico. Este trabajo, todavía en proceso, recoge información de más de 63000 especies, incluyendo su información taxonómica, sinonimia, categorías de amenaza o normas legales que rigen si conservación, información que puede ser consultada desde internet. Este catálogo se nutre principalmente de La Lista Patrón de Especies Silvestres presentes en España (LP), que recoge información proveniente de multitud de sociedades científicas de ámbito nacional y especializadas en diversos grupos taxonómicos, como por ejemplo el Museo Nacional de Ciencias Naturales, el Real Jardín Botánico, la Asociación Herpetológica Española (AHE), la Sociedad Española de Ornitología (SEO-BirdLife), la Sociedad Española de Briología (SEB), la Sociedad Española de Biología de la Conservación de Plantas (SEBICOP), la Sociedad Española para la Conservación y el Estudio de Mamíferos (SECEM), la Sociedad Española de Malacología (SEM), la Asociación Española para la Conservación y el Estudio de los Murciélagos (SECEMU) o la Sociedad Ibérica de Ictiología (SIBIC).
+
+En primera instancia, el acceso a la web del IEPNB sigue presentando algunas de las mismas limitaciones que otros recursos mencionados con anterioridad, principalmente la imposibilidad de realizar consultas de forma no manual. Sin embargo, esta herramienta pone a nuestra disposición la API EIDOS, que nos permiten interactuar con las base de datos del IEPNB de forma más estructurada que la simple búsqueda de un nombre o filtrar información en la web. La utilidad de esta herramienta radica, no obstante, en que abre la puerta a poder acceder a las bases de datos del IEPNB desde entornos de programación como R, y por tanto es posible automatizar los procesos de consulta.
 
 # El paquete *eidosapi* para R
 
-Con el objetivo de facilitar la tarea de cotejar y contrastar la taxonomía de varias de especies, se desarrolló el paquete *eidosapi* para R `r citep(citation())`, disponible abiertamente desde [GitHub](https://github.com/hmirceb/eidosapi). El paquete cuenta con siete funciones que facilitan el acceso a la API de EIDOS, haciendo uso de del paquete *jsonlite* `r citep(citation("jsonlite"))` para interpretar los archivos en formato JSON que devuelve la API al realizar consultas, así como del paquete *fuzzyjoin* `r citep(citation("fuzzyjoin"))` para realizar consultas basadas en lógica difusa que permitan buscar nombres aunque contengan algún error de escritura.
-
-## Desglose de funciones en eidosapi
-
-La principal función, y debatiblemente la maś util, es eidos_taxon_by_name. Esta permite obtener información sobre una lista de taxa intractuando directamente con la API. La información para consulta puede formatearse como un vector de nombres de especies en formato "Género especie" o "Género especie subespecie" (este último también permite variantes como "Género especies subsp. subespecie" y similares). También es posible usar un formato de tabla, con una columna para género, una para especie y otra para subespecie. De forma adicional, si conocemos la autoría descriptiva podemos incluirla para afinar más la búsqueda. El resultado de la función es un tabla (data frame) con la información que hemos aportado para la búsqueda más toda la información que devuelve la API. Esto incluye el identificador único del taxon que hayamos buscado, la valided taxonómica del nombre y los identificadores únicos del taxon. Estos últimos serán de gran utilidad para interactuar con el resto de funciones.
-
-El paquete incluye una función de apoyo, eidos_clean_checklist. Esta es un wrapper de eidos_tables que descarga la Lista Patrón, incluyendo todos los sinónimos disponibles en ella para cada taxón, en un formato listo para trabajar con otras funciones, principalmente eidos_fuzzy_names. Si decíamos que eidos_taxon_by_name era una de las funciones principales del paquete, eidos_fuzzy_names nos permite buscar especies en la LP de forma difusa. Es decir, podemos buscar un nombre mal escrito y la función nos devolverá los taxones más cercanos al nombre que hayamos buscado. Esta búsqueda puede refinarese más si conocemos algunos de los niveles superiores de clasificación de la especie que buscamos. La principal limitación de esta es que su ámbito se restringe a los taxones presentes en la LP.
-
-### Instalación y ejemplos de uso
-
-La instalación del paquete puede realizarse facilmente desde R clonando el repositorio disponible en GitHub.
-
-```{r install package}
-remotes::install_github("https://github.com/hmirceb/eidosapi")
-library(eidosapi)
-```
-
-Vamos a replicar un ejemplo de uso básico, buscar dos especies una, el sapo partero ibérico (*Alytes cisternasii*), sin sinónimos; y otra, *Polygonum viviparum*, con varios sinónimos. Para ello haremos uso de
-
-```{r basic example}
-taxa_list = data.frame(genus = c("Alytes", "Polygonum"),
-                       species = c("cisternasii", "viviparum"))
-eidosapi::eidos_taxon_by_name(taxon_list = taxa_list)
-```
-
-Desde aquí podríamos obetener información de interés como información taxonómica de mayor nivel, o el identificador único de la base de datos. Este podría ser usado, por ejemplo, para buscar el estado legal de cada una de las especies a nivel internacional, nacional y autonómico en España.
-
-```{r use of id}
-taxa_list = data.frame(genus = c("Alytes", "Polygonum"),
-                       species = c("cisternasii", "viviparum"))
-info_sps = eidosapi::eidos_taxon_by_name(taxon_list = taxa_list)
-eidosapi::eidos_conservation_by_id(taxon_id = info_sps$id)
-
-```
-
-Finalmente podemos cotejar un nombre mal escrito con la LP.
-
-```{r fuzzy matching}
-taxa_list = data.frame(genus = c("Lanius", "Vorderea"),
-                       species = c("meridionalis", "pirenaica"))
-checklist = eidosapi::eidos_clean_checklist()
-fuzzy_info_sps = eidosapi::eidos_fuzzy_names(taxa_list = taxa_list, checklist = checklist)
-
-```
+Con el objetivo de explotar las posibilidades ofrecidas por la API EIDOS y facilitar la tarea de cotejar y contrastar la taxonomía de varias de especies, se desarrolló el paquete *eidosapi* para R, disponible en GitHub (https://github.com/hmirceb/eidosapi). El paquete cuenta con varias funciones que facilitan el acceso a las bases de datos del IEPNB, haciendo uso de del paquete *jsonlite* `r citep(citation("jsonlite"))` para interpretar los archivos en formato JSON que devuelve EIDOS al realizar consultas, así como del paquete *fuzzyjoin* `r citep(citation("fuzzyjoin"))` para realizar consultas basadas en lógica difusa que permitan buscar nombres aunque contengan algún error de escritura. El uso específico de cada una de las funciones del paquete así como una explicación de cómo emplearlas está disponible en el material suplementario que acompaña a esta nota y en el propio repositorio del paquete. De forma general, el paquete permite acceder a la información del IEPNB para una o varias especies a la vez, comprobar la validez del nombre aportado u obtener el nombre aceptado para ese taxón. Además, el paquete permite acceder el identificador único de cada taxón, que a su vez sirve para recuperar la información relativa al estado de conservación del mismo en función de los diferentes catálogo nacionales y autonómicos. Otra funcionalidad importante del paquete es cotejar nombres que puedan estar mal escritos y obtener posibles correspondencias en el IEPNB dentro de unos parámetros establecidos por .
 
 # Conclusiones
+
 El trabajo en ecología implica necesariamente distinguir correctamente los organismos con los que trabajamos. Para ello es esencial emplear la información taxonómica más actualizada o a estandarizada posible. El paquete *eidosapi* permite acceder de forma sencilla a las bases de datos taxonómicas del Inventario del Patrimonio Natural y de la Biodiversidad, facilitando la tarea de estandarizar la nomenclatura de los organismos y permitiéndonos incluir en flujos de trabajo.
-
-# Conclusiones
-
-Texto.
 
 # Contribución de los autores
 
@@ -116,52 +74,3 @@ write.bibtex(file = "knitcitations.bib")
 
 ::: {#refs}
 :::
-
-###### TABLA 1
-
-**Tabla 1**. Cada tabla debe tener su correspondiente encabezamiento explicativo. En los artículos de investigación, de revisión y comunicaciones breves se aportarán los encabezamientos tanto en castellano como en inglés, en letra Arial 10 y en una página independiente. Es importante que las tablas sean simples y que no superen el ancho una página DIN A4 vertical. Los originales se deben aportar en formato tabla y no en formato imagen.
-
-**Table 1**. Table heading in English.
-
-```{r Tabla1}
-#| output: asis
-#| echo: false
-#| cache: false
-#| warning: false
-library(knitr)
-kable(head(iris))
-```
-
-###### PIES DE FIGURA
-
-**Figura 1**. Pie de figura 1.
-
-**Figura 2**. Pie de figura 2.
-
-###### FIGURE LEGENDS
-
-**Figure 1**. Figure caption.
-
-**Figure 2**. Figure caption.
-
-###### FIGURA 1
-
-```{r Fig1}
-#| echo: false
-#| fig-cap: "Figura 1. Esto es un ejemplo."
-#| cache: false
-x <- rnorm(100)
-y <- jitter(x, 1000)
-plot(x, y)
-```
-
-###### FIGURA 2
-
-```{r Fig2}
-#| echo: false
-#| fig-cap: "Figura 2. Segundo ejemplo."
-#| cache: false
-a <- sort(rnorm(100))
-b <- c(rep("Group Small", 35), rep("Group Big", 65))
-boxplot(a ~ b)
-```
