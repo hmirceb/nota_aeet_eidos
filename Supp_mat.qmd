@@ -70,7 +70,7 @@ kable(head(data.frame(genus = c("Alytes", "Polygonum", "Pinus"),
                       scientificnameauthorship = c("", "", ""))))
 ```
 
-```{r, basic example, error=TRUE}
+```{r, basic example1, error=TRUE}
 # Tabla ejemplo:
 taxa_list = data.frame(genus = c("Alytes", "Polygonum"),
                        species = c("cisternasii", "viviparum"))
@@ -93,25 +93,30 @@ eidos_results = eidosapi::eidos_taxon_by_name(
   )
 eidos_results[c("supplied_genus", "supplied_species", "name",
                 "idtaxon", "nametype", "acceptednameid")]
+```
+En caso de querer consultar una subespecie, esta puede escribirse como *Género especie subespecie* o *Género especie subsp. subespecie*.
 
+```{r, basic example2, error=TRUE}
 # Usar el formato *Género especie subespecie* da resultados
 # equivalentes a *Género especie subsp. subespecie*:
 eidos_subsp1 = eidosapi::eidos_taxon_by_name(
   taxon_list = "Pinus nigra subsp. salzmannii"
   )
-head(eidos_subsp1[c("supplied_taxon", "supplied_species", "name",
+head(
+  eidos_subsp1[c("supplied_taxon", "supplied_species", "name",
                "idtaxon", "nametype", "acceptednameid")],
      n = 3)
 
 eidos_subsp2 = eidosapi::eidos_taxon_by_name(
   taxon_list = "Pinus nigra salzmannii"
   )
-head(eidos_subsp2[c("supplied_taxon", "supplied_species", "name",
+head(
+  eidos_subsp2[c("supplied_taxon", "supplied_species", "name",
                "idtaxon", "nametype", "acceptednameid")],
      n = 3)
 ```
 
-La tabla obtenida contiene las columnas correspondientes a la información que hayamos aportado, con sus nombres precidos por el sufijo *supplied\_*, y todas las columnas que devuelve la API de EIDOS por defecto. Entre estas columnas encontramos *idtaxon*, que nos permite hacer uso de otras funciones del paquete **eidos_api**.
+La tabla obtenida contiene las columnas correspondientes a la información que hayamos aportado, con sus nombres precidos por el prefijo *supplied\_*, y todas las columnas que devuelve la API de EIDOS por defecto. Entre estas columnas encontramos *idtaxon*, que nos permite hacer uso de otras funciones del paquete **eidosapi**. A este respecto, cabe destacar que a fecha de escritura de este documento la API de EIDOS cuenta con varias inconsistencias en la nomenclatura de las columnas de sus tablas, siendo la más importante que la columna *idtaxon* a veces aparece como *taxonid*. Todas las tablas producidas por cualquiera de las funciones del paquete **eidosapi** renombran la columna *taxonid* a *idtaxon* cuando sea necesario para mantener la consistencia.
 
 ## Busqueda de especies por identificador
 
@@ -150,9 +155,6 @@ eidos_results = eidosapi::eidos_taxon_by_name(
   taxon_list = "Larus audouinii"
   )
 
-# El identificador debería ser 14053:
-print(eidos_results$idtaxon)
-
 # Accedemos a la información sobre su estado de conservación:
 eidos_legal = eidosapi::eidos_legal_status_by_id(
   taxon_id = eidos_results$idtaxon
@@ -185,7 +187,7 @@ eidos_taxo[c("nameid", "name", "nametype", "acceptednameid")]
 
 ## Busqueda de especies con errores en la nomenclatura
 
-Un problema común a la hora de trabajar con datos de especies son los errores de escritura como omitir letras o confundirlas con otras. El paquete **eidos_api** incluye la función `eidos_fuzzy_names` que, haciendo uso de lógica difusa gracias al paquete **fuzzyjoin** `r citep(citation("fuzzyjoin"))`, permite buscar en la base de datos de EIDOS los nombres que más se acerquen a la información que hayamos aportado. La función solo permite contrastar los nombres que aparezcan en la Lista patrón de las especies silvestres presentes en España (LP), y requiere que antes de emplearla descarguemos la LP. Para facilitar esa tarea contamos con la función `eidos_clean_checklist`. En el caso de que no la hayamos descargado o se nos haya olvidado incluirla como argumento, la función `eidos_fuzzy_names` devolverá un error que nos avisará. Podemos comprobar un caso básico de uso con algunos nombres mal escritos.
+Un problema común a la hora de trabajar con datos de especies son los errores de escritura como omitir letras o confundirlas con otras. El paquete **eidosapi** incluye la función `eidos_fuzzy_names` que, haciendo uso de lógica difusa gracias al paquete **fuzzyjoin** `r citep(citation("fuzzyjoin"))`, permite buscar en la base de datos de EIDOS los nombres que más se acerquen a la información que hayamos aportado. La función solo permite contrastar los nombres que aparezcan en la Lista patrón de las especies silvestres presentes en España (LP), y requiere que antes de emplearla descarguemos la LP. Para facilitar esa tarea contamos con la función `eidos_clean_checklist`. En el caso de que no la hayamos descargado o se nos haya olvidado incluirla como argumento, la función `eidos_fuzzy_names` devolverá un error que nos avisará. Podemos comprobar un caso básico de uso con algunos nombres mal escritos.
 
 ```{r, fuzzy matching1, error=TRUE}
 # Creamos la tabla con la información que queremos contrastar:
@@ -250,7 +252,7 @@ Cabe destacar que también podemos buscar las especies aportando un vector con l
 Además de esta posibilidad, la función `eidos_fuzzy_names` cuenta con varios argumentos extra heredados de la función `stringdist_join` del paquete **fuzzyjoin** `r citep(citation("fuzzyjoin"))` que controlan el método para estimar las diferencias entre el nombre que aportemos y los que aparecen en la lista (method), la diferencia máxima entre el nombre aportado y alguno en la LP (maxdist), si queremos que en el resultado final aparezca una columna con estas diferencias (distance_col) y el tipo de unión que queremos con la LP en función del nombre aportado (mode). El método por defecto es "osa" (*optimal string aligment*), con el cual una distancia de 1 equivaldría a que los dos nombres contrastados se diferenciarían en una letra o carácter (e.g. *Lanius* y *Lasius*). Se puede encontrar información adicional sobre este y el resto de los métodos disponibles en la documentación del paquete **fuzzyjoin**. Por defecto la función `eidos_fuzzy_names` usa una distancia de 2, pero esta asunción puede relajarse. En cuanto al tipo de unión, salvo que lo especifiquemos explícitamente la función devuelve solamente los registros de la LP que coincidan con alguno de los que hayamos aportado y aparezcan en ambas tablas (*inner join*), aunque también podemos obtener la LP completa incluyendo nuestras especies de interés (*full join*) y otras variantes de este tipo de uniones entre tablas (*anti*, *left* y *right*).
 
 ## Funciones adicionales
-El paquete **eidos_api** cuenta con varias funciones adicionales, enfocadas principalmente a descargar información asociada a la [Lista patrón de las especies silvestres presentes en España](https://www.miteco.gob.es/es/biodiversidad/servicios/banco-datos-naturaleza/informacion-disponible/bdn_listas_patron.html#lista-patron-de-las-especies-silvestres-presentes-en-espana). Entre estas funciones está la ya mencionada `eidos_clean_checklist`, que descarga la LP con los sinónimos disponibles en un formato largo, para facilitar el uso de la función El funcionamiento de `eidos_fuzzy_names`. `eidos_clean_checklist` depende de la función `eidos_tables`, que permite descargar las diferentes versiones disponibles de la LP (con y sin sinonimias, con normativas y categorías de protección y con pasarelas a otras bases de datos) así como otras tablas consultables en el siguiente [enlace](https://iepnb.gob.es/recursos/servicios-interoperables/api-catalogo). Estas se refieren a listas de regiones biogeográficas, comunidades autónomas, provincias, normativas legales y demás, que podrían ser de cierta utilidad. 
+El paquete **eidosapi** cuenta con varias funciones adicionales, enfocadas principalmente a descargar información asociada a la [Lista patrón de las especies silvestres presentes en España](https://www.miteco.gob.es/es/biodiversidad/servicios/banco-datos-naturaleza/informacion-disponible/bdn_listas_patron.html#lista-patron-de-las-especies-silvestres-presentes-en-espana). Entre estas funciones está la ya mencionada `eidos_clean_checklist`, que descarga la LP con los sinónimos disponibles en un formato largo, para facilitar el uso de la función El funcionamiento de `eidos_fuzzy_names`. `eidos_clean_checklist` depende de la función `eidos_tables`, que permite descargar las diferentes versiones disponibles de la LP (con y sin sinonimias, con normativas y categorías de protección y con pasarelas a otras bases de datos) así como otras tablas consultables en el siguiente [enlace](https://iepnb.gob.es/recursos/servicios-interoperables/api-catalogo). Estas se refieren a listas de regiones biogeográficas, comunidades autónomas, provincias, normativas legales y demás, que podrían ser de cierta utilidad. 
 
 ```{r, fuzzy tablas, error=TRUE}
 # Accedemos a las tablas de comunidades autónomas y de regiones biogeográficas:
