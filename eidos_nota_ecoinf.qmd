@@ -54,7 +54,7 @@ Con el objetivo de explotar las posibilidades ofrecidas por la API EIDOS y facil
 
 # Conclusiones
 
-El trabajo en ecología implica necesariamente distinguir correctamente los organismos con los que trabajamos. Para ello es esencial emplear la información taxonómica más actualizada o a estandarizada posible. El paquete *eidosapi* permite acceder de forma sencilla a las bases de datos taxonómicas del Inventario del Patrimonio Natural y de la Biodiversidad, facilitando la tarea de estandarizar la nomenclatura de los organismos y permitiéndonos incluir en flujos de trabajo.
+Trabajar con . El paquete *eidosapi* permite acceder de forma sencilla a las bases de datos taxonómicas del Inventario del Patrimonio Natural y de la Biodiversidad, facilitando la tarea de estandarizar la nomenclatura de multitud de organismos, obtener información detallada sobre sobre su estado de conservación y permitiéndonos incorporar esta información en nuestros flujos de trabajo.
 
 # Contribución de los autores
 
