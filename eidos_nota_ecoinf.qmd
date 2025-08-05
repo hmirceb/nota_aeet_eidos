@@ -1,5 +1,5 @@
 ---
-title: "eidos_api, un paquete para estandarizar la taxonomía de especies en España"
+title: "eidosapi, un paquete para estandarizar la taxonomía de especies en España"
   
 author: Héctor Miranda-Cebrián*^1^
   
@@ -44,11 +44,11 @@ El trabajo en biología y cualquiera de sus disciplinas implica necesariamente e
 
 La Lista Patrón de Especies Silvestres presentes en España (LP) es el mayor catálogo de especie y recoge un gran . Incluye información taxonómica proveniente de varias sociedades científicas de ámbito nacional como el Museo Nacional de Ciencias Naturales, el Real Jardín Botánico, la Asociación Herpetológica Española (AHE), la Sociedad Española de Ornitología (SEO-BirdLife), la Sociedad Española de Briología (SEB), la Sociedad Española de Biología de la Conservación de Plantas (SEBICOP), la Sociedad Española para la Conservación y el Estudio de Mamíferos (SECEM), la Sociedad Española de Malacología (SEM), la Asociación Española para la Conservación y el Estudio de los Murciélagos (SECEMU), o Sociedad Ibérica de Ictiología (SIBIC). Esta lista forma parte del [Inventario Español del Patrimonio Natural y de la Biodiversidad (IEPNB)](https://iepnb.gob.es/), que a su vez recoge información sobre otras especies no incluidas en la LP, así como información sobre su estado de conservación y legislación al respecto. El IEPNB permite acceder desde su web a la información de más de 63000 taxa tanto autóctonos y alóctonos presente en la región. Además, esta herramienta pone a nuestra disposición varias interfaces de programación de aplicaciones (API) que nos permiten interactuar con las base de datos de IEPNB, como por ejemplo consultar la información taxonómica o legal de una especie en función de su nombre o identificador único en la base de datos o descargar varias versiones de la LP. A pesar de la gran utilida de estos servicios, la [API](<https://iepnb.gob.es/recursos/servicios-interoperables/apirest-eidos>) disponible directamente desde internet no permite realizar consultas múltiples, aunque sí es posible acceder a ella desde entornos de programación como R `r citep(citation())`, y por tanto es posible automatizar los procesos de consulta.
 
-# El paquete *eidos_api* para R
+# El paquete *eidosapi* para R
 
-Con el objetivo de facilitar la tarea de cotejar y contrastar la taxonomía de varias de especies, se desarrolló el paquete *eidos_api* para R `r citep(citation())`, disponible abiertamente desde [GitHub](https://github.com/hmirceb/eidos_api). El paquete cuenta con siete funciones que facilitan el acceso a la API de EIDOS, haciendo uso de del paquete *jsonlite* `r citep(citation("jsonlite"))` para interpretar los archivos en formato JSON que devuelve la API al realizar consultas, así como del paquete *fuzzyjoin* `r citep(citation("fuzzyjoin"))` para realizar consultas basadas en lógica difusa que permitan buscar nombres aunque contengan algún error de escritura.
+Con el objetivo de facilitar la tarea de cotejar y contrastar la taxonomía de varias de especies, se desarrolló el paquete *eidosapi* para R `r citep(citation())`, disponible abiertamente desde [GitHub](https://github.com/hmirceb/eidosapi). El paquete cuenta con siete funciones que facilitan el acceso a la API de EIDOS, haciendo uso de del paquete *jsonlite* `r citep(citation("jsonlite"))` para interpretar los archivos en formato JSON que devuelve la API al realizar consultas, así como del paquete *fuzzyjoin* `r citep(citation("fuzzyjoin"))` para realizar consultas basadas en lógica difusa que permitan buscar nombres aunque contengan algún error de escritura.
 
-## Desglose de funciones en eidos_api
+## Desglose de funciones en eidosapi
 
 La principal función, y debatiblemente la maś util, es eidos_taxon_by_name. Esta permite obtener información sobre una lista de taxa intractuando directamente con la API. La información para consulta puede formatearse como un vector de nombres de especies en formato "Género especie" o "Género especie subespecie" (este último también permite variantes como "Género especies subsp. subespecie" y similares). También es posible usar un formato de tabla, con una columna para género, una para especie y otra para subespecie. De forma adicional, si conocemos la autoría descriptiva podemos incluirla para afinar más la búsqueda. El resultado de la función es un tabla (data frame) con la información que hemos aportado para la búsqueda más toda la información que devuelve la API. Esto incluye el identificador único del taxon que hayamos buscado, la valided taxonómica del nombre y los identificadores únicos del taxon. Estos últimos serán de gran utilidad para interactuar con el resto de funciones.
 
@@ -59,7 +59,7 @@ El paquete incluye una función de apoyo, eidos_clean_checklist. Esta es un wrap
 La instalación del paquete puede realizarse facilmente desde R clonando el repositorio disponible en GitHub.
 
 ```{r install package}
-remotes::install_github("https://github.com/hmirceb/eidos_api")
+remotes::install_github("https://github.com/hmirceb/eidosapi")
 library(eidosapi)
 ```
 
@@ -92,7 +92,7 @@ fuzzy_info_sps = eidosapi::eidos_fuzzy_names(taxa_list = taxa_list, checklist = 
 ```
 
 # Conclusiones
-El trabajo en ecología implica necesariamente distinguir correctamente los organismos con los que trabajamos. Para ello es esencial emplear la información taxonómica más actualizada o a estandarizada posible. El paquete *eidos_api* permite acceder de forma sencilla a las bases de datos taxonómicas del Inventario del Patrimonio Natural y de la Biodiversidad, facilitando la tarea de estandarizar la nomenclatura de los organismos y permitiéndonos incluir en flujos de trabajo.
+El trabajo en ecología implica necesariamente distinguir correctamente los organismos con los que trabajamos. Para ello es esencial emplear la información taxonómica más actualizada o a estandarizada posible. El paquete *eidosapi* permite acceder de forma sencilla a las bases de datos taxonómicas del Inventario del Patrimonio Natural y de la Biodiversidad, facilitando la tarea de estandarizar la nomenclatura de los organismos y permitiéndonos incluir en flujos de trabajo.
 
 # Conclusiones
 

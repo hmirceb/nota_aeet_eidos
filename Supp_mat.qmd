@@ -1,5 +1,5 @@
 ---
-title: 'Material suplementario para <br>"eidos_api, un paquete para estandarizar la taxonomía de especies en España"'
+title: 'Material suplementario para "eidosapi, un paquete para estandarizar la taxonomía de especies en España"'
 
 author: Héctor Miranda-Cebrián*^1^
 
