@@ -1,0 +1,183 @@
+---
+title: 'Material suplementario para <br>"eidos_api, un paquete para estandarizar la taxonomía de especies en España"'
+
+author: Héctor Miranda-Cebrián^1^
+
+format:
+  pdf:
+    fig-height: 6
+    fig-width: 7.5
+    code-overflow: wrap
+
+csl: ecosistemas.csl
+
+bibliography:
+  - references.bib
+  - knitcitations.bib
+---
+
+  > (1) Instituto Pirenaico de Ecología - CSIC
+
+> Autor de correspondencia\*: Héctor Miranda-Cebrián \[[hmiranda@ipe.csic.es](mailto:hmiranda@ipe.csic.es){.email}\]
+
+# Palabras clave
+
+> Taxonomía; Estandarización; Lista Patrón
+
+# Keywords
+
+> Taxonomy; Standardization; Checklist
+
+```{r knitcitations}
+#| echo: false
+#| cache: false
+#| warning: false
+library(quarto)
+library(knitcitations)
+cleanbib()
+cite_options(citation_format = "pandoc")
+```
+
+
+# Instalación y ejemplos de uso
+
+La instalación del paquete puede realizarse facilmente desde R clonando el repositorio disponible en GitHub empleando la función install_github disponible en los paquetes devtools `r citep(citation("devtools"))` y remotes `r citep(citation("remotes"))`.
+
+```{r, install package, error=TRUE}
+# Instalación con remotes
+remotes::install_github("https://github.com/hmirceb/eidos_api", force = TRUE)
+
+# Instalación con devtools
+#devtools::install_github("https://github.com/hmirceb/eidos_api", force = TRUE)
+
+# Cargamos el paquete
+library(eidosapi)
+```
+
+## Busqueda de especies por nombre
+Vamos a replicar un ejemplo de uso básico, buscar dos especies en la base de datos empleando la API. Para comprobar que la API también devuelve los sinónimos del taxón elegido vamos a emplear dos especies diferentes: el sapo partero ibérico (*Alytes cisternasii*), que no tiene sinónimos; y *Polygonum viviparum* que tiene varios. El procedimiento básico consiste en crear una tabla (*data frame*) con el género y la especie de cada taxón. De forma adicional podemos incluir una columna con la subespecie y la autoridad taxonómica que haya descrito el taxón, como se muestra en la Tabla 1. En el caso de que el taxón que nos interesa no tuviese subespecies o no conociésemos la autoría podemos omitir las columnas correspondientes o rellenarlas con *NA*.
+
+```{r Tabla1}
+#| output: asis
+#| echo: false
+#| cache: false
+#| warning: false
+library(knitr)
+kable(head(data.frame(genus = c("Alytes", "Polygonum", "Pinus"),
+                       species = c("cisternasii", "viviparum", "nigra"),
+                      subspecies = c("", "", "salzmannii"),
+                      scientificnameauthorship = c("", "", ""))))
+```
+
+
+```{r, basic example, error=TRUE}
+taxa_list = data.frame(genus = c("Alytes", "Polygonum"),
+                       species = c("cisternasii", "viviparum"))
+eidos_results = eidosapi::eidos_taxon_by_name(taxon_list = taxa_list)
+
+# Obtendríamos el mismo resultado si en vez de una tabla usásemos un vector:
+taxa_list = c("Alytes cisternasii", "Polygonum viviparum")
+eidos_results = eidosapi::eidos_taxon_by_name(taxon_list = taxa_list)
+
+# Usar el formato *Género especie subespecie* da resultados equivalentes a *Género especie subsp. subespecie*:
+eidosapi::eidos_taxon_by_name(taxon_list = "Pinus nigra subsp. salzmannii")
+eidosapi::eidos_taxon_by_name(taxon_list = "Pinus nigra salzmannii")
+```
+
+La tabla obtenida contiene las columnas correspondientes a la información que hayamos aportado, con sus nombres precidos por el sufijo *supplied_*, y todas las columnas que devuelve la API de EIDOS por defecto. Entre estas columnas encontramos idtaxon, que nos permite hacer uso de otras funciones del paquete *eidos_api*.
+
+## Busqueda de especies por identificador
+La columna idtaxon contiene el identificador único para cada taxón de la base de datos. Este podría ser usado, por ejemplo, para buscar el estado legal de cada una de las especies a nivel internacional, nacional y autonómico en España. Por ejemplo, si nos interesase saber el estado de conservación de la gaviota de Audouin (*Larus audouinii*), solo tendríamos que obtener su identificador con la función eidos_taxon_by_name() y después emplearlo introducirlo en la función eidos_conservation_by_id.
+
+```{r, use of id1, error=TRUE}
+# Buscamos el identificador por nombre
+eidos_results = eidosapi::eidos_taxon_by_name(taxon_list = "Larus audouinii")
+
+# El identificador debería ser 14053
+print(eidos_results$taxonid)
+
+# Accedemos a la información sobre su estado de conservación
+eidosapi::eidos_conservation_by_id(taxon_id = eidos_results$taxonid)
+
+```
+
+Así podemos saber que 
+Siguiendo este mismo procedimiento podríamos acceder al estado legal de una especie.
+
+```{r, use of id2, error=TRUE}
+# Buscamos el identificador por nombre
+eidos_results = eidosapi::eidos_taxon_by_name(taxon_list = "Larus audouinii")
+
+# El identificador debería ser 14053
+print(eidos_results$taxonid)
+
+# Accedemos a la información sobre su estado de conservación
+eidosapi::eidos_conservation_by_id(taxon_id = eidos_results$taxonid)
+
+```
+
+O volver a recuperar la información taxonómica del taxón.
+```{r, use of id3, error=TRUE}
+# Buscamos el identificador por nombre
+eidos_results = eidosapi::eidos_taxon_by_name(taxon_list = "Larus audouinii")
+
+# Accedemos a la información sobre su estado de conservación
+eidosapi::eidos_taxon_by_id(taxon_id = eidos_results$taxonid)
+
+```
+
+## Busqueda de especies por nombre
+Un problema común a la hora de es corregir errores de escritura en los nombres o simplemente querer comprobar. El paquete eidos_api incluye la función eidos_fuzzy_names que, haciendo uso de lógica difusa, permite buscar en la base de datos de EIDOS los nombres que más se acerquen a la información que hayamos aportado. La función solo permite constrar los nombres que aparezcan en la Lista Patrón, y requiere que antes de emplearla descarguemos la LP. Para facilitar esa tarea contamos con la función eidos_clean_checklist. En el caso de que no la hayamos descargado o se nos haya olvidad incluirla como argumento, la función eidos_fuzzy_names devolverá un error que nos avisará. Podemos comprobar un caso básico de uso con algunos nombres (muy) mal escritos.
+
+```{r, fuzzy matching1, error=TRUE}
+# Creamos la tabla con la información que queremos contrastar:
+taxa_list = data.frame(genus = c("Vorderea"),
+                       species = c("pirenaica"))
+
+# Obtendremos un error si no incluimos la LP como argumento:
+eidosapi::eidos_fuzzy_names(taxa_list = taxa_list)
+
+# O si no la hemos descargado previamente:
+eidosapi::eidos_fuzzy_names(taxa_list = taxa_list, checklist = checklist)
+
+# Descargarmos la LP y la guardamos en un objeto en el entorno de trabajo de R. Podríamos incluir la función eidos_clean_checklist directamente como argumento aunque no se recomienda porque, si fuésemos a realizar varias búsquedas con eidos_fuzzy_names el proceso se ralentizaría al tener que descargar la LP múltiples veces.
+checklist = eidosapi::eidos_clean_checklist()
+eidosapi::eidos_fuzzy_names(taxa_list = taxa_list, checklist = checklist)
+
+# Podemos comprobar que 
+
+```
+
+Un problema que puede surgir a la hora de emplear esta función es que devuelva varias posibilidades muy dispares para un mismo taxón. Para solventar esto, la función incluye la posibilidad de incluir información taxonómica adicional (reino, filo, clase, orden y familia) en la tabla de datos. Se pueden incluir varias restricciones a la vez, por ejemplo clase y familia; y si queremos buscar varios taxa no es necesario aportar esta información adicional para todas ellas, bastará con poner *NA* en las celdas correspondientes. Para comprobar su utilidad, vamos a buscar información sobre un ave, el alcaudón real *Lanius meridionalis*, que coincide estrechamente con *Lasius meridionalis*, una hormiga.
+
+```{r, fuzzy matching2, error=TRUE}
+# Creamos la tabla con la información que queremos contrastar:
+taxa_list = data.frame(genus = c("Lanius"),
+                       species = c("meridionalis"))
+
+# Si realizamos la búsqueda con esta información obtendremos dos coincidencias:
+checklist = eidosapi::eidos_clean_checklist()
+eidosapi::eidos_fuzzy_names(taxa_list = taxa_list, checklist = checklist)
+
+# Podemos refinar la búsqueda añadiendo, por ejemplo, la clase a la que pertenece nuestro taxón de interés: 
+taxa_list = data.frame(class = "Aves", 
+                       genus = "Lanius",
+                       species = "meridionalis")
+eidosapi::eidos_fuzzy_names(taxa_list = taxa_list, checklist = checklist)
+```
+
+Cabe destacar que también podemos buscar las especies aportando un vector con los nombres que queramos (e.g. `r c("Lanius meridionalis")`) en ve
+La función eidos_fuzzy_names cuenta con varios argumentos extra heredados de la función stringdist_join del paquete fuzzyjoin `r citep(citation("fuzzyjoin"))` que controlan cuán estricta es la búsqueda.
+maxdist = 2,
+                              method = "osa",
+                              mode = "inner",
+                              distance_col = "dist"
+
+
+# Referencias
+
+```{r write_citations}
+#| cache: false
+#| include: false
+write.bibtex(file = "knitcitations.bib")
+```

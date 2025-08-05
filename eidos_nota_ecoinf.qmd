@@ -1,5 +1,5 @@
 ---
-title: "eidos_api, un paquete para estandarizar la taxonomía de especies en España "
+title: "eidos_api, un paquete para estandarizar la taxonomía de especies en España"
   
 author: Héctor Miranda-Cebrián^1^
   
@@ -93,51 +93,6 @@ fuzzy_info_sps = eidosapi::eidos_fuzzy_names(taxa_list = taxa_list, checklist = 
 
 # Conclusiones
 El trabajo en ecología implica necesariamente distinguir correctamente los organismos con los que trabajamos. Para ello es esencial emplear la información taxonómica más actualizada o a estandarizada posible. El paquete *eidos_api* permite acceder de forma sencilla a las bases de datos taxonómicas del Inventario del Patrimonio Natural y de la Biodiversidad, facilitando la tarea de estandarizar la nomenclatura de los organismos y permitiéndonos incluir en flujos de trabajo.
-
-
-Hay varias formas de citar bibliografía (véase <https://quarto.org/docs/authoring/footnotes-and-citations.html>). Una de ellas requiere simplemente adjuntar un fichero BibTex con todas las referencias (en este ejemplo `references.bib`), y citar cada una de ellas usando su 'CitationKey' [e.g. @Yan2011; @Sutherland2011]. También pueden buscarse referencias en internet, citar utilizando el DOI o conectarse a una bibliografía de Zotero (ver <https://quarto.org/docs/visual-editor>).
-
-## Cómo incluir ejemplos
-
-```{r read_data}
-#| eval: false
-#| echo: false
-dataset <- read.csv("mydata.csv")
-```
-
-Ajustamos un modelo lineal:
-
-$$
-y_{i} = \alpha + \beta*x_{i} 
-$$
-
-```{r model}
-#| echo: false
-#| eval: false
-model <- lm(y ~ x)
-```
-
-Utilizamos R `r citep(citation())` y Quarto `r citep(citation("quarto"))` para todos nuestros análisis. Para ajustar los modelos mixtos utilizamos `lme4` `r citep(citation("lme4"))`.
-
-# Resultados
-
-Esta sección está dividida en subsecciones.
-
-## Subsección 1
-
-Los árboles de la parcela A fueron más altos que en la parcela B (altura media: `r mean(25, 31, 28)` vs `r mean(13, 19, 16)` m). Y muchos más resultados que se actualizan dinámicamente.
-
-## Subsección 2
-
-Texto.
-
-## Subsección 3
-
-Texto.
-
-# Discusión
-
-Texto.
 
 # Conclusiones
 
