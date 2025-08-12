@@ -40,22 +40,22 @@ cleanbib()
 cite_options(citation_format = "pandoc")
 ```
 
-El trabajo en ecología y cualquiera de sus disciplinas requiere información actualizada, o al menos estandarizada, sobre la nomenclatura de nuestros organismos de estudio (@Patterson2010). Para solventar este problema, se han ido desarrollando diferentes herramientas que permitan cotejar la nomenclatura de una especie contra bases de datos taxonómicas. Por un lado, tenemos herramientas como las webs de Flora Ibérica y Fauna Ibérica, que permiten consultar de forma manual sinónimos y nombres. Sin embargo, estas carecen de una interfaz de usuario que permita la consulta de un gran número de especies, acceder a ellas de forma automática o hacerlo desde entornos que permitan integrar los resultados en un flujo de trabajo más complejo. Por otro lado, existen herramientas que sí pueden consultarse a través de interfaces de programación de aplicaciones (API) desde entornos como R `r citep(citation())`, facilitando la tarea de cotejar un gran número de especies a la vez así como su incorporación en nuestros flujos de trabajo. Algunos ejemplos de esto son el paquete *taxize* `r citep(citation("taxize"))`, con acceso a más de 20 bases de datos diferentes; o el paquete *WorldFlora* @kindt2020 para acceder a *World Flora Online*, por citar algunas. La principal desventaja de estos servicios radica en que, a pesar de la gran cantidad de información que contienen, puede darse un desajuste entre su nomenclatura y la establecida a nivel nacional o regional. Esta limitación se hace más patente si, por ejemplo, queremos recopilar información sobre el estado de conservación de una especie presente en España, puesto que el nombre aceptado en una base de datos internacional puede no casar con el empleado en catálogos a nivel nacional o regional.
+El trabajo en ecología y cualquiera de sus disciplinas requiere información actualizada, o al menos estandarizada, sobre la nomenclatura de nuestros organismos de estudio (@Patterson2010). Para solventar este problema, se han ido desarrollando diferentes herramientas que permitan cotejar la nomenclatura de una especie contra bases de datos taxonómicas. Por un lado, tenemos herramientas como las webs de Flora Ibérica y Fauna Ibérica, que permiten consultar de forma manual sinónimos y nombres. Sin embargo, estas carecen de una interfaz de usuario que permita la consulta de un gran número de especies, acceder a ellas de forma automática o hacerlo desde entornos que permitan integrar los resultados en un flujo de trabajo más complejo. Por otro lado, existen herramientas que sí pueden consultarse a través de interfaces de programación de aplicaciones (API) desde entornos como R `r citep(citation())`, facilitando la tarea de cotejar un gran número de especies a la vez así como su incorporación en nuestros flujos de trabajo. Algunos ejemplos de esto son el paquete *taxize* `r citep(citation("taxize"))`, con acceso a más de 20 bases de datos diferentes; o el paquete *WorldFlora* @kindt2020 para acceder a *World Flora Online*. La principal desventaja de estos servicios radica en que, a pesar de la gran cantidad de información que contienen, puede darse un desajuste entre su nomenclatura y la establecida a nivel nacional o regional. Esta limitación se hace más patente si, por ejemplo, queremos recopilar información sobre el estado de conservación de una especie presente en España, puesto que el nombre aceptado en una base de datos internacional puede no casar con el empleado en catálogos a nivel nacional o regional.
 
 El [Inventario Español del Patrimonio Natural y de la Biodiversidad (IEPNB)](https://iepnb.gob.es/) supone un primer paso para solventar estas limitaciones a la hora de acceder a la información sobre las especies presentes en España. Este trabajo, todavía en proceso, recoge información de más de 63000 taxa, incluyendo su información taxonómica, sinonimia, categorías de amenaza o normativas legales que rigen su conservación, nutriéndose en gran medida de la Lista Patrón de Especies Silvestres presentes en España [(LP)](https://www.miteco.gob.es/es/biodiversidad/servicios/banco-datos-naturaleza/informacion-disponible/bdn_listas_patron.html#lista-patron-de-las-especies-silvestres-presentes-en-espana), que recoge información proveniente de multitud de sociedades científicas de ámbito nacional y especializadas en diversos grupos taxonómicos. A simple vista, la web del IEPNB sigue presentando las mismas limitaciones que otros recursos mencionados con anterioridad, como la imposibilidad de realizar consultas de forma no manual. Sin embargo, esta herramienta pone a nuestra disposición la API EIDOS, que nos permiten acceder a las bases de datos del IEPNB desde entornos de programación como R, y por tanto a automatizar los procesos de consulta.
 
-# El paquete **eidosapi** para R
+# El paquete *eidosapi* para R
 
-El paquete **eidosapi** se desarrolló para explotar las posibilidades ofrecidas por la API EIDOS y facilitar la tarea de cotejar y contrastar la taxonomía de múltiples especies al mismo tiempo desde el entorno de programación de R (@fig-1). El paquete cuenta con varias funciones que facilitan el acceso a las bases de datos del IEPNB, haciendo uso de del paquete **jsonlite** `r citep(citation("jsonlite"))` para interpretar los archivos en formato JSON que devuelve EIDOS al realizar consultas, así como del paquete **fuzzyjoin** `r citep(citation("fuzzyjoin"))` para realizar consultas basadas en coincidencia difusa (*fuzzy matching*) que permitan buscar nombres en la LP aunque contengan algún error de escritura. A continuación se muestran varios ejemplos sencillos de uso, pero puede encontrase más información en el material suplementario.
+El paquete **eidosapi** se desarrolló para explotar las posibilidades ofrecidas por la API EIDOS y facilitar la tarea de cotejar y contrastar la taxonomía de múltiples especies al mismo tiempo desde el entorno de programación de R (@fig-1). El paquete cuenta con varias funciones que facilitan el acceso a las bases de datos del IEPNB, haciendo uso de del paquete **jsonlite** `r citep(citation("jsonlite"))` para interpretar los archivos en formato JSON que devuelve EIDOS al realizar consultas, así como del paquete **fuzzyjoin** `r citep(citation("fuzzyjoin"))` para realizar consultas basadas en coincidencia difusa (*fuzzy matching*) que permitan buscar nombres en la LP aunque contengan algún error de escritura. A continuación se muestran varios ejemplos sencillos de uso, pero puede encontrase más información en el el repositorio del paquete (https://github.com/hmirceb/eidosapi).
 
-![Figura 1: Diagrama del flujo de trabajo de **eidosapi**.](figuras/fig_1.png){#fig-1}
+![Figura 1: Diagrama del flujo de trabajo básico con **eidosapi**.](figuras/fig_1.png){#fig-1}
 
 # Instalación y ejemplos básicos de uso de **eidosapi**
 
-La instalación del paquete puede realizarse fácilmente clonando el repositorio disponible en GitHub (https://github.com/hmirceb/eidosapi).
+La instalación del paquete puede realizarse fácilmente clonando el repositorio disponible en GitHub.
 
 ```{r install package}
-# Instalación con remotes
+# Instalación
 remotes::install_github("https://github.com/hmirceb/eidosapi",
                         force = TRUE, 
                         quiet = TRUE)
@@ -66,7 +66,7 @@ library(eidosapi)
 
 ## Busqueda de especies por nombre
 
-Un ejemplo básico sería buscar el nombre aceptado y sinónimos de una o varias especies. Para ellos vamos a emplear dos especies diferentes: la alondra ricotí (*Chersophilus duponti*), que no tiene sinónimos; y *Polygonum viviparum* que tiene varios. El procedimiento básico consiste en crear una tabla con el género y la especie de cada taxón. También podemos incluir una columna con la subespecie y la autoridad taxonómica que haya descrito el taxón. En el caso de que el taxón que nos interesa no tuviese subespecies o no conociésemos la autoría podemos omitir las columnas correspondientes o rellenarlas con *NA*. Puesto que el IEPNB todavía es un trabajo en marcha, algunos organismos no están presentes en la base de datos o carecen de información detallada. Para evitar errores al respecto, **eidosapi** ignora esos casos.
+Un ejemplo básico sería buscar el nombre aceptado y sinónimos de una o varias especies. Para ello vamos a emplear la alondra ricotí (*Chersophilus duponti*), que no tiene sinónimos; y *Polygonum viviparum* que tiene varios. El procedimiento básico consiste en crear una tabla con el género y la especie de cada taxón. También podemos incluir una columna con la subespecie y la autoridad taxonómica que haya descrito el taxón. En el caso de que el taxón que nos interesa no tuviese subespecies o no conociésemos la autoría podemos omitir las columnas correspondientes o rellenarlas con *NA*. Cabe destacar que el IEPNB todavía es un trabajo en marcha y algunos organismos no están presentes en la base de datos o carecen de información detallada. Para evitar errores al respecto, **eidosapi** ignora esos casos.
 
 ```{r, basic example1, error=TRUE}
 # Tabla ejemplo:
@@ -78,16 +78,16 @@ eidos_results = eidosapi::eidos_taxon_by_name(
   )
 
 # La tabla resultante tienes muchas columnas
-# Para facilitar la visualización se muestra solamente 
-# el nombre que hemos buscado, su identificador,
-# si es un sinónimo o no y el id del taxón aceptado:
+# Aquí solo se muestra  el nombre que hemos buscado,
+# su identificador, si es un sinónimo o no y 
+# el id del taxón aceptado:
 knitr::kable(eidos_results[c("supplied_taxon",
                 "idtaxon", "nametype", "acceptednameid")])
 ```
 
 ## Estado de conservación
 
-La columna *idtaxon* obtenida en el paso anterior contiene el identificador único para cada taxón de la base de datos. Si quisiéramos saber si la alondra ricotí tiene asociada alguna categoría de amenaza, solo tendríamos que introducir este  indicador en la función `eidos_conservation_by_id`.
+La columna *idtaxon* obtenida en el paso anterior contiene el identificador único para cada taxón en el IEPNB. Si quisiéramos saber si la alondra ricotí tiene asociada alguna categoría de amenaza, solo tendríamos que introducir este  indicador en la función `eidos_conservation_by_id`.
 
 ```{r, use of id1, error=TRUE}
 # Buscamos el identificador por nombre:
