@@ -1,5 +1,5 @@
 ---
-title: 'Material suplementario para "eidosapi, un paquete para estandarizar nomenclatura de especies en España"'
+title: 'Material suplementario para "eidosapi, un paquete para interactuar con la base de datos de biodiversidad EIDOS"'
 
 author: Héctor Miranda-Cebrián*^1^
 
