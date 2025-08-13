@@ -73,8 +73,8 @@ Un ejemplo básico sería buscar el nombre aceptado y sinónimos de una o varias
 taxa_list = data.frame(genus = c("Chersophilus", "Polygonum", "Androsace"),
                        species = c("duponti", "viviparum", "cylindrica"),
                        subspecies = c(NA, NA, "hirtella"))
-eidos_results = eidosapi::eidos_taxon_by_name(
-  taxon_list = taxa_list
+eidos_results = eidos_taxon_by_name(
+  taxa_list = taxa_list
   )
 
 # La tabla resultante tienes muchas columnas
@@ -91,15 +91,15 @@ La columna *idtaxon* obtenida en el paso anterior contiene el identificador úni
 
 ```{r, use of id1, error=TRUE}
 # Buscamos el identificador por nombre:
-eidos_results = eidosapi::eidos_taxon_by_name(
-  taxon_list = "Chersophilus duponti"
+eidos_results = eidos_taxon_by_name(
+  taxa_list = "Chersophilus duponti"
   )
 
 # El identificador debería ser 11182:
 print(eidos_results$idtaxon[1])
 
 # Accedemos a la información sobre su estado de conservación
-eidos_cons = eidosapi::eidos_conservation_by_id(
+eidos_cons = eidos_conservation_by_id(
   taxon_id = eidos_results$idtaxon
   )
 
@@ -120,20 +120,20 @@ taxa_list = data.frame(genus = c("Vorderea", "Alytes"),
                        species = c("pyrenaica", "cisternasi"))
 
 # Obtendremos un error si no incluimos la LP como argumento:
-eidosapi::eidos_fuzzy_names(taxa_list = taxa_list)
+eidos_fuzzy_names(taxa_list = taxa_list)
 
 # Descargarmos la LP y la guardamos en un objeto en el entorno de 
 # trabajo de R:
-checklist = eidosapi::eidos_clean_checklist()
+checklist = eidos_clean_checklist()
 
 # Ya podemos usar la función eidos_fuzzy_names:
-eidos_result = eidosapi::eidos_fuzzy_names(taxa_list = taxa_list, 
+eidos_result = eidos_fuzzy_names(taxa_list = taxa_list, 
                                            checklist = checklist)
 
 # Podemos comprobar que ha encontrado dos coincidencias: 
 # Borderea pyrenaica y Alytes cisternasii:
-knitr::kable(eidos_result[c("idtaxon", "taxon_clean", 
-               "ScientificName", "WithoutAutorship")])
+knitr::kable(eidos_result[c("idtaxon", "name_clean", 
+               "name", "withoutautorship")])
 ```
 
 # Conclusiones
