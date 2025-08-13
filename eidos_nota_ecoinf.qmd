@@ -132,7 +132,7 @@ eidos_result = eidos_fuzzy_names(taxa_list = taxa_list,
 
 # Podemos comprobar que ha encontrado dos coincidencias: 
 # Borderea pyrenaica y Alytes cisternasii:
-knitr::kable(eidos_result[c("idtaxon", "name_clean", 
+knitr::kable(eidos_result[c("idtaxon", 
                "name", "withoutautorship")])
 ```
 
