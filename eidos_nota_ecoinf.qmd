@@ -66,37 +66,37 @@ library(eidosapi)
 
 ## Busqueda de especies por nombre
 
-Un ejemplo básico sería buscar el nombre aceptado y sinónimos de una o varias especies. Para ello vamos a emplear la alondra ricotí (*Chersophilus duponti*), que no tiene sinónimos; y *Polygonum viviparum* que tiene varios. El procedimiento básico consiste en crear una tabla con el género y la especie de cada taxón. También podemos incluir una columna con la subespecie y la autoridad taxonómica que haya descrito el taxón. En el caso de que el taxón que nos interesa no tuviese subespecies o no conociésemos la autoría podemos omitir las columnas correspondientes o rellenarlas con *NA*. Cabe destacar que el IEPNB todavía es un trabajo en marcha y algunos organismos no están presentes en la base de datos o carecen de información detallada. Para evitar errores al respecto, **eidosapi** ignora esos casos.
+Un ejemplo básico sería buscar el nombre aceptado y sinónimos de una o varias especies. Para ello vamos a emplear el halcón de Eleonora (*Falco eleonorae*), que no tiene sinónimos; y *Polygonum viviparum* que tiene varios. El procedimiento básico consiste en crear una tabla con el género y la especie de cada taxón. También podemos incluir una columna con la subespecie y la autoridad taxonómica que haya descrito el taxón, en este caso vamos a probar con *Androsace cylindrica hirtella*. En el caso de que el taxón que nos interesa no tuviese subespecies o no conociésemos la autoría podemos omitir las columnas correspondientes o rellenarlas con *NA*. Cabe destacar que el IEPNB todavía es un trabajo en marcha y algunos organismos no están presentes en la base de datos o carecen de información detallada. Para evitar errores al respecto, **eidosapi** ignora esos casos.
 
 ```{r, basic example1, error=TRUE}
 # Tabla ejemplo:
-taxa_list = data.frame(genus = c("Chersophilus", "Polygonum", "Androsace"),
-                       species = c("duponti", "viviparum", "cylindrica"),
+taxa_list = data.frame(genus = c("Falco", "Polygonum", "Androsace"),
+                       species = c("eleonorae", "viviparum", "cylindrica"),
                        subspecies = c(NA, NA, "hirtella"))
 eidos_results = eidos_taxon_by_name(
   taxa_list = taxa_list
-  )
+)
 
 # La tabla resultante tienes muchas columnas
 # Aquí solo se muestra  el nombre que hemos buscado,
 # su identificador, si es un sinónimo o no y 
 # el id del taxón aceptado:
 knitr::kable(eidos_results[c("supplied_taxon",
-                "idtaxon", "nametype", "acceptednameid")])
+                             "idtaxon", "nametype", "acceptednameid")])
 ```
 
 ## Estado de conservación
 
-La columna *idtaxon* obtenida en el paso anterior contiene el identificador único para cada taxón en el IEPNB. Si quisiéramos saber si la alondra ricotí tiene asociada alguna categoría de amenaza, solo tendríamos que introducir este  indicador en la función `eidos_conservation_by_id`.
+La columna *idtaxon* obtenida en el paso anterior contiene el identificador único para cada taxón en el IEPNB. Si quisiéramos saber si el halcón de Eleonora tiene asociada alguna categoría de amenaza, solo tendríamos que introducir este  indicador en la función `eidos_conservation_by_id`.
 
 ```{r, use of id1, error=TRUE}
 # Buscamos el identificador por nombre:
 eidos_results = eidos_taxon_by_name(
-  taxa_list = "Chersophilus duponti"
-  )
+  taxa_list = "Falco eleonorae"
+)
 
-# El identificador debería ser 11182:
-print(eidos_results$idtaxon[1])
+# El identificador debería ser 11198:
+print(eidos_results$idtaxon)
 
 # Accedemos a la información sobre su estado de conservación
 eidos_cons = eidos_conservation_by_id(
@@ -108,7 +108,7 @@ knitr::kable(eidos_cons[c("idtaxon", "anio", "categoriaconservacion", "aplicaa")
 
 ```
 
-En este caso, la alondra ricotí a nivel mundial pasó de "Casi amenazada" (NT) a "Vulnerable" (VU) en el año 2020, mientras que en España y la Península Ibérica se la considera "En peligro" (EN). Siguiendo este mismo procedimiento podríamos conocer las normativas específicas que rigen esas categoría para cada especie con la función `eidos_legal_status_by_id`.
+En este caso, el halcón de Eleonora a nivel mundial está en la categoría "Preocupación menor" (LC) desde el año 2016, mientras que en España y la Península Ibérica se la considera "Casi amenazado" (NT) desde 2004 y 2021 respectivamente. Siguiendo este mismo procedimiento podríamos conocer las normativas específicas que rigen esas categoría para cada especie con la función `eidos_legal_status_by_id`.
 
 ## Búsqueda de especies con errores en la nomenclatura
 
