@@ -1,0 +1,51 @@
+Hola @Julenasti e @iramosgutierrez 
+
+Muchas gracias por dedicar tiempo a revisar la nota, gracias a ello también he corregido algunas cosas del paquete que se me habían pasado. 
+
+Os contesto a los comentarios uno a uno, empiezo por los de @iramosgutierrez:
+
+**"Ambas funciones filtran las observaciones de las que no encuentra información, lo cual en mi experiencia puede llevar a eliminar datos sin carnos cuenta. No sé si sería posible dejarlos como NA/“Unfound” o algo similar, de modo que el usuario pueda detectar estos casos fácilmente."**
+
+He añadido la opción de que las funciones eidos_fuzzy_names() y eidos_taxon_by_name() devuelvan las especies para las que no se encuentra una correspondencia en EIDOS. En el resto prefiero excluirlas porque la información del estado de conservación de algunas especies aparece como un espacio en blanco en ves de un NA en el IEPNB y genera falsas coincidencias.
+ 
+**"En el caso de la búsqueda fuzzy, quizás explicaría brevemente la posibilidad de editar el umbral de similitud de los nombres.**
+
+**Además, si el parámetro checklist es obligatorio, y generalmente es el resultado de la función eidos_clean_checklist(), quizás lo incluiría en el valor por defecto de la función, de modo que si un usuario no lo ha hecho previamente, lo haga por él (poner una estructura como la que se muestra en el código de abajo.**
+
+**Como duda más profunda del funcionamiento, no veo por qué no encuentra la especie “Barlia robertianum”. Lógicamente es un error (debería ser Barlia robertiana o Himantoglossum robertianum), pero es un cambio pequeño como para que no lo encuentre, ¿no?"**
+
+He añadido un ejemplo sobre el uso del argumento maxdist en la función eidos_fuzzy_names(), aunque en un principio con el ejemplo de _Barlia robertiana/robertianum_ debería funcionar con maxdist = 2. Lo he comprobado con la función _stringdist_ del paquete homónimo, que es el que emplea **fuzzyjoin** para calcular las distancias entre cadenas de texto, y devuelve una distancia de 2 entre ambos nombres. Estaré atento por si acaso veo casos similares porque no entiendo el porqué.
+
+También he modificado la función eidos_fuzzy_names() para que por defecto descargue la LP en vez de avisar de que no lo has hecho. He dejado un comentario al respecto en el ejemplo correspondiente de la nota. La lógica de dejarla fuera era que si queremos utilizar la función varias veces, cada vez que lo hagamos se iba a descargar la checklist, con el consiguiente aumento en el tiempo de ejecución. Al dejarla fuera te obliga a descargarla y dejarla como un objeto en el entorno de trabajo por lo que las siguientes veces ya no hay que descargarla. He seguido la sugerencia de Ignacio y ahora descarga la LP por defecto pero si la tenemos guardada la podemos incluir como argumento y ahorrar ese tiempo.
+
+**"En conjunto, estas dos funciones creo que son muy útiles. Sin embargo, creo que una función que aunara a ambas (buscando primero las “exact”, y para el resto, buscar con el método “fuzzy”) creo que podría ser una solución que simplificaría mucho el flujo de trabajo de estas búsquedas. Lógicamente, entiendo que esto es una alternativa estética de funcionamiento, más que funcional."**
+
+Es una cuestión que también me he planteado. Aunque el IEPNB bebe principalmente de la Lista Patrón, también contiene información no presente en la LP. Por ejemplo, hay especies que aparecen en el Inventario Forestal Nacional que no están en la LP pero sí en el IEPNB. Prefiero dejarlas separadas para remarcar esa distinción. El flujo de trabajo que empleo normalmente es buscar primero con eidos_fuzzy_names() porque es más rápida cuando se trabaja con muchos nombres y después buscar el resto con eidos_taxon_by_name(), que es considerablemente más lenta. También considero que da más control a la hora de buscar.
+
+**"Quizás podría ser útil añadir una columna con el nombre de la especie para identificarlas de manera visual."**
+
+He añadido una columna con el nombre de la especies en las funciones eidos_conservation_by_id() y eidos_legal_status_by_id(). La función original incluía un argumento para elegir si solo queríamos la información que devuelve la API tal cual o incluir también la información taxonómica empleando la función eidos_taxon_by_id(). Lo he quitado en favor de incluir el nombre directamente. No lo puse por defecto para evitar hacer varias llamadas a la API por cada búsqueda porque aumenta el tiempo de ejecución, pero la realidad es que si queremos sacar la especies vamos a tener que hacer otra llamada a la API (aunque si tenemos el ID de una especie seguramente sea porque lo hemos buscado antes en la API y tenemos el nombre de la especie).
+
+Sigo con las sugerencias de @Julenasti:
+
+**"L14, 38, 69 y 87"**
+He añadido los enlaces correspondientes y corregido los ejemplos según la guía de estilo.
+
+**"L30: Y esta base de datos recoge los nombres aceptados tanto a nivel nacional como internacional? Más que nada por aclarar en qué sentido solventa las limitaciones que indicas"**
+He aclarado un poco la frase. El IEPNB recoge nombres aceptados y sus sinónimos según autoridades nacionales. La principal ventaja es que reune en un solo sitio toda la información en vez de estar dispersa en varias fuentes diferentes y además cuadra con la nomenclatura utilizada a nivel administrativo. Esto no significa que cuadre con la nomenclatura internacional y seguramente también será fruto de debate entre taxónomos a nivel nacional. 
+
+**"L52: No sé si tienes intención de subir el paquete a CRAN, pero creo que es importante que tengas en cuenta que la nota quedará publicada tal como está ahora aunque lo subas. Te lo comento más que nada porque si lo subes a CRAN la gente lo instalará desde ahí generalmente. Si no tienes intención de subirlo no pasa nada pero si lo tienes quizás mencionar algo al respecto puede estar bien. Por ejemplo, en el paquete labeleR que también está en revisión mencionan esto:**
+
+**New developments will happen in the GitHub repository (https://github.com/EcologyR/labeleR) and eventually pushed to CRAN. "**
+Mi intención a corto plazo es mantenerlo en GitHub al menos hasta que terminen el IEPNB y la API por comodidad a la hora de sacar actualizaciones is cambian algo. Lo he reflejado en el texto revisado.
+
+**"L70: Esta especie no la mencionas en el texto no?"**
+Sobre el ejemplo de Androsace, ya aparece en el texto aunque en la versión que tenía guardada sí que se hacía referencia. Seguramente mandaría una versión intermedia, culpa mía. 
+
+**"L83: Quizás se puede utilizar el guión bajo para separar palabras y facilitar así su lectura (este comentario aplica a todo el texto)"**
+En el paquete he respetado en la medida de lo posible los nombres de las columnas que devuelve la API por un tema de compatibilidad entre tablas. Yo también preferiría que usasen otro formato, pero de momento prefiero mantenerlo hasta que el MITECO termine la API. 
+
+**"L83-84: Por qué está la alondra ricotí dos veces?"**
+He sustituido la alondra ricotí de los ejemplos por el halcón de Eleonora. Al buscar una especie en la API, si esta tiene subespecies las devuelve también. La alondra ricotí tiene una subespecie y en este caso prefiero quitarla de los ejemplos por simplicidad. Todavía tengo que decidir qué hacer con este comportamiento de la API en el paquete.
+
+De nuevo muchas gracias a ambos por las revisión. 
