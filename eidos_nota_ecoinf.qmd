@@ -132,7 +132,7 @@ eidos_result <- eidos_fuzzy_names(taxa_list = taxa_list)
 knitr::kable(eidos_result[c("supplied_taxon", "idtaxon", 
                "name", "withoutautorship")])
 ```
-La función `eidos_fuzzy_names()` también nos permite ajustar la búsqueda empleando el argumento *maxdist*, que controla el grado de similitud entre los nombres aceptados y el nombre que queremos buscar.
+La función `eidos_fuzzy_names()` también nos permite ajustar la búsqueda empleando el argumento *maxdist*, que controla el grado de similitud entre los nombres aceptados y el nombre que queremos buscar en una escala de 0 (indicando una coincidencia exacta) a 1.
 
 ```{r, fuzzy matching2, error=TRUE}
 # Tabla con la información que queremos contrastar:
@@ -150,7 +150,7 @@ checklist <- eidos_clean_checklist()
 # un resultado:
 fuzzy_dist2 <- eidos_fuzzy_names(taxa_list = taxa_list,
                                  checklist = checklist,
-                                 maxdist = 2) # valor por defecto
+                                 maxdist = 0.01)
 
 knitr::kable(fuzzy_dist2[c("supplied_taxon", "idtaxon", 
                "name", "withoutautorship")])
@@ -158,7 +158,7 @@ knitr::kable(fuzzy_dist2[c("supplied_taxon", "idtaxon",
 # Podemos relajar el criterio para obtener más resultados:
 fuzzy_dist3 <- eidos_fuzzy_names(taxa_list = taxa_list,
                                  checklist = checklist,
-                                 maxdist = 3)
+                                 maxdist = 0.1)
 
 knitr::kable(fuzzy_dist3[c("supplied_taxon", "idtaxon", 
                "name", "withoutautorship")])
